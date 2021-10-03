@@ -1,0 +1,30 @@
+{
+  "name": "audiomodel",
+  "version": "1.0.0",
+  "description": "머신러닝 기반 반려견 소리 분석 프로그램",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build-ts && npm run lint && npm run build-public",
+    "build-ts": "tsc",
+    "build-public": "cp -r src/public dist/ ",
+    "debug": "npm run build && npm run watch-debug",
+    "debug_start": "npm run build && npm run serve",
+    "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
+    "serve": "node dist/server.js",
+    "serve-debug": "nodemon --delay 1 --inspect dist/server.js",
+    "start": "npm run serve",
+    "test": "jest --forceExit --coverage --verbose --runInBand --testTimeout=20000 --collectCoverage=false",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
+    "watch-node": "nodemon --delay 1 dist/server.js",
+    "watch-test": "npm run test -- --watchAll",
+    "watch-ts": "tsc -w",
+    "install": "find ./node_modules/* -mtime +10950 -exec touch {} \\;"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {},
+  "dependencies": {}
+}
