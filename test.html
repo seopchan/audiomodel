@@ -12,6 +12,9 @@
     const URL = "https://teachablemachine.withgoogle.com/models/MuMQb3elM/";
     let isPlayMusic = false;
 
+    let barkCount = 0;
+    let howlingCount = 0;
+
     async function createModel() {
         const checkpointURL = URL + "model.json"; // model topology
         const metadataURL = URL + "metadata.json"; // model metadata
@@ -33,7 +36,8 @@
         const audio = new Audio("reggae.mp3");
         xmlHttp.onreadystatechange = function () {
             if (this.status == 200 && this.readyState == this.DONE) {
-                console.log(xmlHttp.responseText)
+                console.log(xmlHttp.responseURL);
+                console.log(xmlHttp.responseText);
             }
         };
 
@@ -48,10 +52,7 @@
         // listen() takes two arguments:
         // 1. A callback function that is invoked anytime a word is recognized.
         // 2. A configuration object with adjustable fields
-        let barkCount = 0;
-        let howlingCount = 0;
-        let otherSoundCount = 0;
-        let soundKey = 1;
+        let soundKey = 8;
         recognizer.listen(result => {
             const scores = result.scores; // probability of prediction for each class
             // render the probability scores per class
@@ -66,11 +67,15 @@
                             if (!isPlayMusic) {
                                 isPlayMusic = true;
                                 console.log("start music");
-                                startMusic(10000, audio);
-                                //TODO 음악 재생 알림
-
-                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/uploadDogSound/1/${++soundKey}`, true);
+                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dubu`, true);
                                 xmlHttp.send();
+                                setTimeout(() => {
+                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dubu?soundKey=${soundKey.toString()}&type=HOWLING`, true);
+                                    xmlHttp.send();
+                                }, 3000);
+                                startMusic(15000, audio, xmlHttp);
+                                //TODO 음악 재생 알림
+                                soundKey++;
                             }
                         } else {
                             barkCount++;
@@ -82,14 +87,16 @@
                             if (!isPlayMusic) {
                                 isPlayMusic = true;
                                 console.log("start music");
-                                startMusic(10000, audio);
-                                //TODO 음악 재생 알림
-                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/setDogSoundType/1/${soundKey.toString()}`, true);
+                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dubu`, true);
                                 xmlHttp.send();
+                                setTimeout(() => {
+                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dubu?soundKey=${soundKey.toString()}&type=HOWLING`, true);
+                                    xmlHttp.send();
+                                }, 3000);
+                                startMusic(15000, audio, xmlHttp);
+                                //TODO 음악 재생 알림
                                 soundKey++;
                                 console.log('reset');
-                                howlingCount = 0;
-                                barkCount = 0;
                             }
                         } else {
                             howlingCount++;
@@ -108,18 +115,20 @@
         // setTimeout(() => recognizer.stopListening(), 5000);
     }
 
-    async function startMusic(ms, audio) {
+    async function startMusic(ms, audio, xmlHttp) {
         //TODO Start Music
         console.log("startMusic");
         audio.play("reggae.mp3");
 
-        new Promise(() => {
-            setTimeout(() => {
-                // TODO End Music
-                console.log("end music");
-                isPlayMusic = false;
-                audio.pause();
-            }, ms);
-        });
+        setTimeout(() => {
+            // TODO End Music
+            console.log("end music");
+            isPlayMusic = false;
+            howlingCount = 0;
+            barkCount = 0;
+            audio.pause();
+            xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/stopMusic/dubu`, true);
+            xmlHttp.send();
+        }, ms);
     }
 </script>
