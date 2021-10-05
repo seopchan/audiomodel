@@ -52,7 +52,7 @@
         // listen() takes two arguments:
         // 1. A callback function that is invoked anytime a word is recognized.
         // 2. A configuration object with adjustable fields
-        let soundKey = 8;
+        let soundKey = 200;
         recognizer.listen(result => {
             const scores = result.scores; // probability of prediction for each class
             // render the probability scores per class
@@ -67,10 +67,10 @@
                             if (!isPlayMusic) {
                                 isPlayMusic = true;
                                 console.log("start music");
-                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dubu`, true);
+                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dog`, true);
                                 xmlHttp.send();
                                 setTimeout(() => {
-                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dubu?soundKey=${soundKey.toString()}&type=HOWLING`, true);
+                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dog?soundKey=${soundKey.toString()}&type=HOWLING`, true);
                                     xmlHttp.send();
                                 }, 3000);
                                 startMusic(15000, audio, xmlHttp);
@@ -87,10 +87,10 @@
                             if (!isPlayMusic) {
                                 isPlayMusic = true;
                                 console.log("start music");
-                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dubu`, true);
+                                xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/startMusic/dog`, true);
                                 xmlHttp.send();
                                 setTimeout(() => {
-                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dubu?soundKey=${soundKey.toString()}&type=HOWLING`, true);
+                                    xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/addDogCrying/dog?soundKey=${soundKey.toString()}&type=HOWLING`, true);
                                     xmlHttp.send();
                                 }, 3000);
                                 startMusic(15000, audio, xmlHttp);
@@ -127,7 +127,7 @@
             howlingCount = 0;
             barkCount = 0;
             audio.pause();
-            xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/stopMusic/dubu`, true);
+            xmlHttp.open('post', `http://dogserver-env.eba-ptwmdexz.ap-northeast-2.elasticbeanstalk.com/dog/stopMusic/dog`, true);
             xmlHttp.send();
         }, ms);
     }
